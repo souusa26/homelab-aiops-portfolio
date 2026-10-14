@@ -302,10 +302,8 @@ python server.py
 
 ---
 
-## 👤 Sobre o Autor & Contato
 
 **Tiago Sousa**  
-*Desenvolvedor de Software, Especialista em Infraestrutura Linux, DevOps e AIOps.*
 
 * **GitHub:** [@souusa26](https://github.com/souusa26)
 * **LinkedIn:** [linkedin.com/in/tiago-sousa](https://www.linkedin.com)
@@ -313,5 +311,3 @@ python server.py
 * **Localização:** Brasil 🇧🇷
 
 ---
-
-> *"Infraestrutura de alta disponibilidade não é sobre evitar que coisas quebrem, mas sobre construir sistemas inteligentes e resilientes o bastante para se recuperarem antes que qualquer pessoa perceba."*
