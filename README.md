@@ -1,4 +1,4 @@
-# 🚀 Homelab & AIOps Portfolio | DevOps, SRE & Autonomous Infrastructure
+# Homelab & AIOps Portfolio | DevOps, SRE & Autonomous Infrastructure
 
 [![Ubuntu Server](https://img.shields.io/badge/Ubuntu%20Server-24.04%20LTS-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 [![Docker](https://img.shields.io/badge/Docker%20Engine-29.1-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
@@ -13,23 +13,23 @@ Repositório público documentando a arquitetura física, lógica e operacional 
 
 ---
 
-## 📌 Sumário Executivo
+## Sumário Executivo
 
-- [💡 A Filosofia do Projeto](#-a-filosofia-do-projeto)
-- [🖥️ Especificações do Host & Hardware](#️-especificações-do-host--hardware)
-- [📸 Galeria Visual da Infraestrutura](#-galeria-visual-da-infraestrutura)
-- [🏗️ Arquitetura de Rede & Borda Zero Trust](#️-arquitetura-de-rede--borda-zero-trust)
-- [🧠 AIOps: Agentes Autônomos, MCP & Ciclo de Memória](#-aiops-agentes-autônomos-mcp--ciclo-de-memória)
-- [📊 Observabilidade & SRE: Telemetria Proativa](#-observabilidade--sre-telemetria-proativa)
-- [🤖 ChatOps: Administração pelo Telegram e Discord](#-chatops-administração-pelo-telegram-e-discord)
-- [🛡️ Resiliência Operacional & Scripts Watchdog](#️-resiliência-operacional--scripts-watchdog)
-- [📂 Estrutura do Repositório](#-estrutura-do-repositório)
-- [🚀 Como Reproduzir o Ambiente](#-como-reproduzir-o-ambiente)
-- [👤 Sobre o Autor & Contato](#-sobre-o-autor--contato)
+- [ A Filosofia do Projeto](#-a-filosofia-do-projeto)
+- [ Especificações do Host & Hardware](#️-especificações-do-host--hardware)
+- [ Galeria Visual da Infraestrutura](#-galeria-visual-da-infraestrutura)
+- [ Arquitetura de Rede & Borda Zero Trust](#️-arquitetura-de-rede--borda-zero-trust)
+- [ AIOps: Agentes Autônomos, MCP & Ciclo de Memória](#-aiops-agentes-autônomos-mcp--ciclo-de-memória)
+- [ Observabilidade & SRE: Telemetria Proativa](#-observabilidade--sre-telemetria-proativa)
+- [ ChatOps: Administração pelo Telegram e Discord](#-chatops-administração-pelo-telegram-e-discord)
+- [ Resiliência Operacional & Scripts Watchdog](#️-resiliência-operacional--scripts-watchdog)
+- [ Estrutura do Repositório](#-estrutura-do-repositório)
+- [ Como Reproduzir o Ambiente](#-como-reproduzir-o-ambiente)
+- [ Sobre o Autor & Contato](#-sobre-o-autor--contato)
 
 ---
 
-## 💡 A Filosofia do Projeto
+##  A Filosofia do Projeto
 
 Em ambientes de missão crítica e em operações de Provedores de Serviços Gerenciados (MSP / NOC), o maior valor de um engenheiro está na **mentalidade preventiva**: antecipar falhas antes que o cliente ou usuário final sinta lentidão ou indisponibilidade.
 
@@ -41,7 +41,7 @@ Este servidor foi construído com três diretrizes centrais:
 
 ---
 
-## 🖥️ Especificações do Host & Hardware
+##  Especificações do Host & Hardware
 
 O homelab é hospedado em um notebook corporativo dedicado exclusivamente a nó de computação Linux, aproveitando o formato portátil para obter **baixíssimo consumo de energia e no-break embutido**:
 
@@ -58,7 +58,7 @@ O homelab é hospedado em um notebook corporativo dedicado exclusivamente a nó 
 
 ---
 
-## 📸 Galeria Visual da Infraestrutura
+##  Galeria Visual da Infraestrutura
 
 ### 1. Central de Serviços & Dashboard de Acesso Rápido
 Interface web unificada que centraliza o status e links dos serviços internos da infraestrutura:
@@ -88,27 +88,27 @@ Painel administrativo do projeto comercial de mídia embarcada rodando no mesmo 
 
 ---
 
-## 🏗️ Arquitetura de Rede & Borda Zero Trust
+##  Arquitetura de Rede & Borda Zero Trust
 
 ```mermaid
 flowchart TD
-    subgraph WAN["🌍 Internet Pública"]
+    subgraph WAN[" Internet Pública"]
         PublicUsers["Usuários Externos / Clientes"]
         SysAdmin["Administrador (Mobile / Laptop)"]
     end
 
-    subgraph Edge["🛡️ Camada de Borda & Ingress"]
+    subgraph Edge[" Camada de Borda & Ingress"]
         CF["Cloudflare Edge (WAF + DDoS Mitigation + Auto TLS)"]
         TailscaleMesh["Tailscale Mesh Network (WireGuard 256-bit P2P)"]
     end
 
-    subgraph HostLinux["💻 Host Ubuntu Server 24.04 LTS (Dell Latitude)"]
+    subgraph HostLinux[" Host Ubuntu Server 24.04 LTS (Dell Latitude)"]
         CloudflaredDaemon["cloudflared (Named Tunnel Daemon)"]
         TailscaleNode["tailscaled (Node Agent)"]
         AdGuardDNS["AdGuard Home (DNS Sinkhole :53)"]
         CaddyProxy["Caddy Reverse Proxy (:80/:443)"]
 
-        subgraph DockerStacks["🐳 Stacks Docker Isoladas"]
+        subgraph DockerStacks[" Stacks Docker Isoladas"]
             direction TB
             subgraph SecSRE["Observabilidade & SRE"]
                 Prometheus["Prometheus TSDB (:9090)"]
@@ -164,7 +164,7 @@ flowchart TD
 
 ---
 
-## 🧠 AIOps: Agentes Autônomos, MCP & Ciclo de Memória
+##  AIOps: Agentes Autônomos, MCP & Ciclo de Memória
 
 Ao contrário de abordagens convencionais de automação puramente baseadas em scripts rígidos, este homelab é administrado com **Inteligência Artificial Operacional (AIOps)** em regime contínuo.
 
@@ -185,7 +185,7 @@ O agente que auxilia na administração do servidor mantém uma rotina autônoma
 
 ---
 
-## 📊 Observabilidade & SRE: Telemetria Proativa
+##  Observabilidade & SRE: Telemetria Proativa
 
 A observabilidade foi projetada para cobrir todos os quatro sinais de ouro do Google SRE (**Latência, Tráfego, Erros e Saturação**):
 
@@ -199,7 +199,7 @@ A observabilidade foi projetada para cobrir todos os quatro sinais de ouro do Go
 
 ---
 
-## 🤖 ChatOps: Administração pelo Telegram e Discord
+##  ChatOps: Administração pelo Telegram e Discord
 
 Administrar a infraestrutura a qualquer momento e a partir de qualquer dispositivo móvel foi um requisito fundamental:
 
@@ -218,7 +218,7 @@ Bot leve e direto, sem dependências pesadas, para consulta instantânea de hard
 
 ---
 
-## 🛡️ Resiliência Operacional & Scripts Watchdog
+##  Resiliência Operacional & Scripts Watchdog
 
 A resiliência da infraestrutura é garantida por automações que tratam cenários reais de falha:
 
@@ -231,7 +231,7 @@ A resiliência da infraestrutura é garantida por automações que tratam cenár
 
 ---
 
-## 📂 Estrutura do Repositório
+##  Estrutura do Repositório
 
 ```text
 homelab-aiops-portfolio/
@@ -273,7 +273,7 @@ homelab-aiops-portfolio/
 
 ---
 
-## 🚀 Como Reproduzir o Ambiente
+##  Como Reproduzir o Ambiente
 
 ### Pré-requisitos
 * Host com **Linux (Ubuntu Server 22.04+ ou Debian 12+)**
