@@ -1,0 +1,1 @@
+* * * * * root /usr/local/bin/plex-mount-watchdog.sh >> /var/log/plex-watchdog.log 2>&1

@@ -1,0 +1,58 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  - job_name: 'uptime-kuma'
+    static_configs:
+      - targets: ['uptime-kuma:3001']
+
+  - job_name: 'plex-exporter'
+    static_configs:
+      - targets: ['plex-exporter:9594']
+
+  - job_name: 'qbittorrent-exporter'
+    static_configs:
+      - targets: ['qbittorrent-exporter:8090']
+
+  - job_name: 'homeassistant'
+    metrics_path: /api/prometheus
+    # Token persistido de forma segura via volume /etc/prometheus/secrets/
+    bearer_token_file: /etc/prometheus/secrets/homeassistant_token
+    static_configs:
+      # Alcança o host via bridge usando host-gateway
+      - targets: ['host.docker.internal:8123']
+
+  - job_name: 'blackbox-http-checks'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - https://app.example.com
+        - http://app.example.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  - job_name: 'minecraft'
+    static_configs:
+      - targets: ['mc-monitor:8080']
+        labels:
+          server_name: 'Minecraft Paper Server'

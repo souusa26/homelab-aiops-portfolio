@@ -1,0 +1,74 @@
+default_config:
+
+# Provedores de autenticação (exemplo com trusted networks para display e login padrão)
+homeassistant:
+  auth_providers:
+    - type: trusted_networks
+      trusted_networks:
+        - 127.0.0.1
+        - 192.168.1.0/24
+      allow_bypass_login: false
+    - type: homeassistant
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+stream:
+
+# Exportação nativa de métricas para o Prometheus (/api/prometheus)
+prometheus:
+  namespace: homeassistant
+
+# Notificações via Telegram Bot
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_bot_token
+    allowed_chat_ids:
+      - !secret telegram_chat_id
+
+notify:
+  - platform: telegram
+    name: telegram
+    chat_id: !secret telegram_chat_id
+
+# Webhooks REST para integração com sistemas financeiros / ERPs
+rest_command:
+  firefly_add_expense:
+    url: "http://127.0.0.1:8090/api/v1/transactions"
+    method: POST
+    headers:
+      Authorization: !secret firefly_api_token
+      Content-Type: "application/json"
+    payload: >
+      {
+        "transactions": [{
+          "type": "withdrawal",
+          "date": "{{ now().strftime('%Y-%m-%d') }}",
+          "amount": "{{ amount }}",
+          "description": "{{ description }}",
+          "source_name": "Carteira",
+          "destination_name": "Despesas"
+        }]
+      }
+
+  firefly_add_income:
+    url: "http://127.0.0.1:8090/api/v1/transactions"
+    method: POST
+    headers:
+      Authorization: !secret firefly_api_token
+      Content-Type: "application/json"
+    payload: >
+      {
+        "transactions": [{
+          "type": "deposit",
+          "date": "{{ now().strftime('%Y-%m-%d') }}",
+          "amount": "{{ amount }}",
+          "description": "{{ description }}",
+          "source_name": "Receitas",
+          "destination_name": "Carteira"
+        }]
+      }

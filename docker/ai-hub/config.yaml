@@ -1,0 +1,39 @@
+model_list:
+  # Anthropic Claude
+  - model_name: claude
+    litellm_params:
+      model: anthropic/claude-sonnet-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+      max_tokens: 4096
+
+  # Google Gemini
+  - model_name: gemini
+    litellm_params:
+      model: gemini/gemini-2.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+      max_tokens: 4096
+
+  # Groq - Llama / GPT-OSS High Speed
+  - model_name: groq
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+      max_tokens: 8192
+
+  # OpenRouter Gateway
+  - model_name: openrouter
+    litellm_params:
+      model: openrouter/anthropic/claude-3.5-sonnet
+      api_key: os.environ/OPENROUTER_API_KEY
+      max_tokens: 4096
+
+  # OpenAI GPT-4o
+  - model_name: ChatGPT
+    litellm_params:
+      model: openai/gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+      max_tokens: 4096
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL

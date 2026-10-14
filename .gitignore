@@ -1,0 +1,66 @@
+# =============================================================================
+# Homelab & AIOps Portfolio — Git Ignore Seguro
+# Bloqueio estrito de credenciais, certificados, bancos locais e logs
+# =============================================================================
+
+# Variáveis de ambiente e segredos
+.env
+*.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+*.pfx
+*.p12
+*.jks
+*token*
+*secret*
+!monitoring/prometheus/secrets/README.md
+*credential*
+*credentials*
+*password*
+*passwd*
+
+# Bancos de dados locais e caches
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+kuma.db
+homeassistant_v2.db
+
+# Chaves de túneis e autenticação externa
+playit.toml
+playit_data/
+*.json.cert
+credentials.json
+
+# Logs e arquivos temporários
+*.log
+*.log.*
+/logs/
+*.tmp
+*.bak
+*.bkp
+test_*.json
+update_*.json
+sessions.json
+
+# Ambientes virtuais Python
+venv/
+.venv/
+env/
+botenv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configurações do SO e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

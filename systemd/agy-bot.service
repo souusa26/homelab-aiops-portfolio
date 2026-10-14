@@ -1,0 +1,16 @@
+# /etc/systemd/system/agy-bot.service
+[Unit]
+Description=Bot do Telegram para Antigravity CLI
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/agy-telegram
+ExecStart=/opt/agy-telegram/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target
+

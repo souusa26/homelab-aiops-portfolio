@@ -1,0 +1,11 @@
+# Discord Bot
+discord.py==2.3.2
+
+# System Monitoring
+psutil==5.9.6
+
+# Environment
+python-dotenv==1.0.0
+
+# HTTP Requests
+requests==2.31.0

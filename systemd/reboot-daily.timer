@@ -1,0 +1,10 @@
+# /etc/systemd/system/reboot-daily.timer
+[Unit]
+Description=Reinício diário às 06:00
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

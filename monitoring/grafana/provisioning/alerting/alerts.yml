@@ -1,0 +1,630 @@
+apiVersion: 1
+groups:
+- orgId: 1
+  name: Server Infrastructure
+  folder: Server Monitoring
+  interval: 1m
+  rules:
+  - uid: target_down
+    title: Prometheus Target Down
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: up == 0
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 2m
+    annotations:
+      summary: Target {{ $labels.instance }} is down
+      description: Job {{ $labels.job }} on {{ $labels.instance }} has been down for
+        more than 2 minutes.
+    labels:
+      severity: critical
+  - uid: high_memory
+    title: High Memory Usage (>85%)
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes
+          * 100 > 85
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 5m
+    annotations:
+      summary: Instance {{ $labels.instance }} has high memory usage
+      description: Memory usage is above 85%
+    labels:
+      severity: warning
+  - uid: low_disk
+    title: Low Disk Space (<10%)
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"}
+          / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"})
+          * 100 < 10
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 10m
+    annotations:
+      summary: Instance {{ $labels.instance }} has low disk space on {{ $labels.mountpoint
+        }}
+      description: Disk space is below 10%
+    labels:
+      severity: warning
+  - uid: high_cpu_usage
+    title: High CPU Usage (>85%)
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))
+          * 100) > 85
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 5m
+    annotations:
+      summary: Instance {{ $labels.instance }} has high CPU usage
+      description: CPU usage is above 85%
+    labels:
+      severity: warning
+- orgId: 1
+  name: Docker Containers
+  folder: Server Monitoring
+  interval: 1m
+  rules:
+  - uid: container_stopped
+    title: Container Stopped or Down
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: time() - container_last_seen{name!="", name!="cadvisor"} > 60
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 2m
+    annotations:
+      summary: Container {{ $labels.name }} has stopped
+      description: The Docker container {{ $labels.name }} has not been seen for more
+        than 1 minute.
+    labels:
+      severity: critical
+  - uid: container_high_memory
+    title: Container High Memory Usage (>90%)
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: (container_memory_working_set_bytes{name!=""} / (container_spec_memory_limit_bytes{name!=""}
+          != 0)) * 100 > 90
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: OK
+    for: 5m
+    annotations:
+      summary: Container {{ $labels.name }} has high memory usage
+      description: Container {{ $labels.name }} is using over 90% of its memory limit.
+    labels:
+      severity: warning
+- orgId: 1
+  name: Website Monitoring
+  folder: Server Monitoring
+  interval: 1m
+  rules:
+  - uid: telalivre_down
+    title: Website app.example.com is Down
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: probe_success{job="blackbox-http-checks"} == 0
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 2m
+    annotations:
+      summary: Website {{ $labels.instance }} is down
+      description: The website {{ $labels.instance }} did not return a successful
+        response.
+    labels:
+      severity: critical
+  - uid: telalivre_slow
+    title: Website app.example.com is Slow
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: probe_duration_seconds{job="blackbox-http-checks"} > 5
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 3m
+    annotations:
+      summary: Website {{ $labels.instance }} is slow
+      description: Response time is > 5 seconds.
+    labels:
+      severity: warning
+  - uid: telalivre_ssl_expiry
+    title: SSL Certificate Expiry Imminent
+    condition: C
+    data:
+    - refId: A
+      datasourceUid: prometheus
+      relativeTimeRange:
+        from: 300
+        to: 0
+      model:
+        expr: (probe_ssl_earliest_cert_expiry{job="blackbox-http-checks"} - time())
+          / 86400 < 7
+        refId: A
+    - refId: B
+      datasourceUid: __expr__
+      model:
+        refId: B
+        type: reduce
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: A
+        reducer: last
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - A
+          reducer:
+            params: []
+            type: last
+          type: query
+    - refId: C
+      datasourceUid: __expr__
+      model:
+        refId: C
+        type: math
+        datasource:
+          type: __expr__
+          uid: __expr__
+        expression: $B > 0
+        conditions:
+        - evaluator:
+            params:
+            - 0
+            type: gt
+          operator:
+            type: and
+          query:
+            params:
+            - C
+          reducer:
+            params: []
+            type: last
+          type: query
+    noDataState: OK
+    execErrState: Error
+    for: 1h
+    annotations:
+      summary: SSL Certificate for {{ $labels.instance }} expires soon
+      description: The SSL certificate will expire in less than 7 days.
+    labels:
+      severity: warning

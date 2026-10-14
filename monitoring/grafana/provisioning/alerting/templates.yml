@@ -1,0 +1,24 @@
+apiVersion: 1
+templates:
+  - orgId: 1
+    name: "telegram_template"
+    template: |
+      {{ define "telegram.message" }}
+      {{ if gt (len .Alerts.Firing) 0 }}
+      🔥 <b>ALERTA: {{ len .Alerts.Firing }} disparo(s)</b>
+      {{ range .Alerts.Firing }}
+      <b>📌 Nome:</b> {{ .Labels.alertname }}
+      <b>🚨 Severidade:</b> {{ .Labels.severity }}
+      <b>📝 Resumo:</b> {{ .Annotations.summary }}
+      <b>ℹ️ Detalhes:</b> {{ .Annotations.description }}
+      {{ end }}
+      {{ end }}
+      
+      {{ if gt (len .Alerts.Resolved) 0 }}
+      ✅ <b>RESOLVIDO: {{ len .Alerts.Resolved }} alerta(s)</b>
+      {{ range .Alerts.Resolved }}
+      <b>📌 Nome:</b> {{ .Labels.alertname }}
+      <b>📝 Resumo:</b> {{ .Annotations.summary }}
+      {{ end }}
+      {{ end }}
+      {{ end }}

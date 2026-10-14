@@ -1,0 +1,16 @@
+# /etc/systemd/system/trello-api.service
+[Unit]
+Description=Trello API Gateway
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/trello-api
+ExecStart=/opt/trello-api/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8088
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

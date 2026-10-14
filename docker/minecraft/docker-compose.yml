@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: minecraft
+    network_mode: "host"
+    environment:
+      EULA: "TRUE"
+      TYPE: "${MC_TYPE:-PAPER}"
+      MEMORY: "${MC_MEMORY:-4G}"
+      ONLINE_MODE: "${MC_ONLINE_MODE:-FALSE}"
+      DIFFICULTY: "${MC_DIFFICULTY:-normal}"
+    volumes:
+      - ${MC_DATA_DIR:-./data}:/data
+    restart: unless-stopped
+
+  mc-monitor:
+    image: itzg/mc-monitor
+    container_name: mc-monitor
+    command:
+      - export-for-prometheus
+      - -port
+      - "8080"
+      - -servers
+      - host.docker.internal:25565
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    depends_on:
+      - minecraft
+    networks:
+      - default
+      - monitor-net
+
+  playit:
+    image: playitgg/playit
+    container_name: playit
+    network_mode: "host"
+    volumes:
+      - ./playit_data:/root/.config/playit_gg
+    restart: unless-stopped
+
+networks:
+  monitor-net:
+    name: monitoring_monitor-net
+    external: true

@@ -1,0 +1,66 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: telas_livres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-telas_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_secure_db_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-telas_livres_prod}
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: telas_livres_api
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-telas_admin}:${POSTGRES_PASSWORD:-change_me_secure_db_pass}@db:5432/${POSTGRES_DB:-telas_livres_prod}
+      - UPLOAD_DIR=${UPLOAD_DIR:-videos}
+      - SECRET_KEY=${SECRET_KEY:-change_this_jwt_secret_key}
+      - ALGORITHM=${ALGORITHM:-HS256}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    volumes:
+      - .:/app
+      - videos_data:/app/videos
+    working_dir: /app
+    depends_on:
+      - db
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: telas_livres_tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
+    volumes:
+      - ./cloudflared/config.yml:/etc/cloudflared/config.yml:ro
+    depends_on:
+      - api
+    profiles:
+      - tunnel
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: telas_livres_caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  videos_data:
+  caddy_data:
+  caddy_config:

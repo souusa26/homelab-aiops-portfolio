@@ -1,0 +1,90 @@
+version: "3.8"
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Sao_Paulo}
+      - WEBUI_PORT=${QBITTORRENT_PORT:-8080}
+    volumes:
+      - ${MEDIA_CONFIG_DIR:-./config}/qbittorrent:/config
+      - ${MEDIA_DATA_DIR:-./data}:/data
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${QBITTORRENT_PORT:-8080}:8080"
+      - "6881:6881"
+      - "6881:6881/udp"
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Sao_Paulo}
+    volumes:
+      - ${MEDIA_CONFIG_DIR:-./config}/prowlarr:/config
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:9696:9696"
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Sao_Paulo}
+    volumes:
+      - ${MEDIA_CONFIG_DIR:-./config}/sonarr:/config
+      - ${MEDIA_DATA_DIR:-./data}:/data
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:8989:8989"
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Sao_Paulo}
+    volumes:
+      - ${MEDIA_CONFIG_DIR:-./config}/radarr:/config
+      - ${MEDIA_DATA_DIR:-./data}:/data
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:7878:7878"
+    restart: unless-stopped
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-America/Sao_Paulo}
+      - VERSION=docker
+    volumes:
+      - ${MEDIA_CONFIG_DIR:-./config}/plex:/config
+      - ${MEDIA_DATA_DIR:-./data}/media:/data/media
+      # Volumes remotos montados via SSHFS + automount do systemd com propagação rslave
+      - ${REMOTE_FILMES_PATH:-/mnt/remote_filmes}:/mnt/remote_filmes:rslave
+      - ${REMOTE_SERIES_PATH:-/mnt/remote_series}:/mnt/remote_series:rslave
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=${TZ:-America/Sao_Paulo}
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:8191:8191"
+    restart: unless-stopped

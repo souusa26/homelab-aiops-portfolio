@@ -1,0 +1,13 @@
+# /etc/systemd/system/telegram-bot.service
+[Unit]
+Description=Telegram Status Bot
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/telegram_bot/bot.py
+Restart=always
+User=root
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

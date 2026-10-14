@@ -1,0 +1,15 @@
+[Unit]
+Description=Homelab Discord Bot
+After=network.target
+
+[Service]
+Type=simple
+User=homelab
+WorkingDirectory=/opt/homelab-discord-bot
+EnvironmentFile=/opt/homelab-discord-bot/.env
+ExecStart=/opt/homelab-discord-bot/venv/bin/python homelabbot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

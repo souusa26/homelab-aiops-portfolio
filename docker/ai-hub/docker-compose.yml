@@ -1,0 +1,51 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:4000:4000"
+    environment:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      GROQ_API_KEY: "${GROQ_API_KEY}"
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      LITELLM_MASTER_KEY: "${LITELLM_MASTER_KEY}"
+      UI_USERNAME: "${UI_USERNAME}"
+      UI_PASSWORD: "${UI_PASSWORD}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-litellm}:${POSTGRES_PASSWORD:-litellm_pass}@db:5432/${POSTGRES_DB:-litellm}"
+    command: --config /app/config.yaml
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: litellm-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-litellm}
+      POSTGRES_USER: ${POSTGRES_USER:-litellm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-litellm_pass}
+    volumes:
+      - litellm_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:3002:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://litellm:4000/v1
+      - OPENAI_API_KEY=${LITELLM_MASTER_KEY}
+    volumes:
+      - open_webui_data:/app/backend/data
+    depends_on:
+      - litellm
+    restart: unless-stopped
+
+volumes:
+  open_webui_data:
+  litellm_db_data:
