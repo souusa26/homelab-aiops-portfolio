@@ -19,8 +19,7 @@ mcp = FastMCP("homelab-aiops-server")
 PROMETHEUS_URL = os.getenv("PROMETHEUS_URL", "http://127.0.0.1:9090")
 ALLOWED_SERVICES = {
     "plex", "qbittorrent", "sonarr", "radarr", "prowlarr",
-    "minecraft", "mc-monitor", "telas_livres_api", "telas_livres_db",
-    "telas_livres_caddy", "telas_livres_tunnel", "homeassistant", "go2rtc"
+    "minecraft", "mc-monitor", "homeassistant", "go2rtc"
 }
 
 

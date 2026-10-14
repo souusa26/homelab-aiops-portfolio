@@ -44,13 +44,6 @@ flowchart TD
 
         subgraph StacksDocker["🐳 Docker Containers & Stacks Segregadas"]
             direction TB
-            subgraph Apps["Digital Signage & Produção"]
-                FastAPI["FastAPI Core\n(Telas Livres)"]
-                PostgresProd["PostgreSQL 15 (Prod)"]
-                PostgresHomolog["PostgreSQL 15 (Homolog)"]
-                FastAPI --> PostgresProd
-            end
-
             subgraph Media["Media & Automation"]
                 Plex["Plex Media Server"]
                 Arr["Radarr / Sonarr / Prowlarr / qBittorrent"]
@@ -75,7 +68,6 @@ flowchart TD
         end
     end
 
-    ReverseProxy --> FastAPI
     Tailscale --> Grafana
     Tailscale --> AdGuard
     Tailscale --> MCP
@@ -102,9 +94,3 @@ flowchart TD
 ### Higiene de Rede & Resolução DNS (AdGuard Home)
 * Atua como resolvedor primário da infraestrutura interna, bloqueando telemetrias nocivas, rastreadores e domínios de malware direto no nível de DNS.
 * Utiliza upstreams criptografados via **DNS-over-HTTPS (DoH)** e **DNS-over-TLS (DoT)** para garantir privacidade contra espionagem por ISPs.
-
-### Segregação Estrita de Ambientes (Prod vs Homolog)
-* O ecossistema comercial conta com ambientes de **Produção** e **Homologação** completamente independentes no mesmo nó:
-  * Bancos PostgreSQL em instâncias e volumes isolados.
-  * Portas internas distintas (8000 vs 8001; 5432 vs 5433).
-  * Validação prévia de releases e migrações de banco (Alembic) antes da publicação em produção.

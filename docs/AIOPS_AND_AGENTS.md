@@ -67,7 +67,7 @@ Criamos o servidor customizado [`ai-ops/mcp-homelab-server/server.py`](../ai-ops
 Um dos aspectos mais singulares desta infraestrutura é a **persistência de memória e identidade do agente de IA** entre sessões, eliminando a amnésia padrão dos modelos de linguagem:
 
 ### O Arquivo de Memória (`DIARIO.md`)
-O agente possui um arquivo de estado mental contínuo (`DIARIO.md`). Nele ficam gravadas as decisões de arquitetura tomadas em conjunto com o engenheiro, os problemas solucionados (ex: ajustes no watchdog do Plex, migrações de banco no Telas Livres) e as prioridades operacionais do servidor.
+O agente possui um arquivo de estado mental contínuo (`DIARIO.md`). Nele ficam gravadas as decisões de arquitetura tomadas em conjunto com o engenheiro, os problemas solucionados (ex: ajustes no watchdog do Plex, provisionamento de métricas no Prometheus) e as prioridades operacionais do servidor.
 
 ### Rotinas Autônomas de Reflexão e Sono
 1. **O Despertar do Cérebro ([`scripts/agent-memory/cerebro.sh`](../scripts/agent-memory/cerebro.sh)):**

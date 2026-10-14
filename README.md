@@ -81,13 +81,6 @@ Requisições diárias processadas com bloqueio preventivo de telemetrias, anún
 
 ---
 
-### 4. Digital Signage (Tela Livre) & Exposição de Borda
-Painel administrativo do projeto comercial de mídia embarcada rodando no mesmo host, segregado em ambientes de Produção e Homologação com túneis Cloudflare:
-
-![Telas Livres Kiosk e Cloudflare](assets/telas-kiosk-cloudflare.jpeg)
-
----
-
 ##  Arquitetura de Rede & Borda Zero Trust
 
 ```mermaid
@@ -117,13 +110,6 @@ flowchart TD
                 Exporters["Exporters: Node, cAdvisor, Blackbox, Plex, qBit"]
             end
 
-            subgraph SecDOOH["Digital Signage & APIs"]
-                TelasProd["Telas Livres API Prod (:8000)"]
-                TelasHomolog["Telas Livres API Homolog (:8001)"]
-                PostgresProd["PostgreSQL 15 (Prod :5432)"]
-                PostgresHomolog["PostgreSQL 15 (Homolog :5433)"]
-            end
-
             subgraph SecAIOps["AIOps & Automação Inteligente"]
                 FastMCPServer["Homelab FastMCP Server (:8085 / stdio)"]
                 AgyBot["Antigravity Telegram Bot"]
@@ -143,8 +129,6 @@ flowchart TD
     PublicUsers -->|HTTPS Seguro| CF
     CF -->|Zero Trust Tunnel| CloudflaredDaemon
     CloudflaredDaemon --> CaddyProxy
-    CaddyProxy --> TelasProd
-    CaddyProxy --> TelasHomolog
 
     SysAdmin -->|Acesso Autenticado MFA| TailscaleMesh
     TailscaleMesh --> TailscaleNode
@@ -238,11 +222,9 @@ homelab-aiops-portfolio/
 ├── assets/                          # Screenshots, diagramas e evidências visuais
 │   ├── homepage.png
 │   ├── homeassistant-dashboard.png
-│   ├── adguard-metrics.png
-│   └── telas-kiosk-cloudflare.jpeg
+│   └── adguard-metrics.png
 ├── docker/                          # Manifestos Docker Compose sanitizados
 │   ├── media-stack/                 # Plex, Radarr, Sonarr, Prowlarr, qBittorrent
-│   ├── telas-livres/                # Digital Signage DOOH (Prod e Homolog) + Caddy + Cloudflared
 │   ├── minecraft/                   # Paper Server + mc-monitor (Prometheus exporter) + Playit
 │   ├── home-automation/             # Home Assistant Core + Go2RTC
 │   └── ai-hub/                      # LiteLLM Multi-Model Gateway + Open-WebUI + Postgres
@@ -296,9 +278,6 @@ cp monitoring/.env.example monitoring/.env
 
 # AI-Hub
 cp docker/ai-hub/.env.example docker/ai-hub/.env
-
-# Digital Signage
-cp docker/telas-livres/.env.example docker/telas-livres/.env
 
 # Bots ChatOps
 cp chatops/agy-telegram-bot/.env.example chatops/agy-telegram-bot/.env
