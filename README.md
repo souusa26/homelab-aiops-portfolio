@@ -75,13 +75,13 @@ Monitoramento em tempo real de automação residencial, retransmissão de câmer
 ---
 
 ### 3. DNS Sinkhole Corporativo (AdGuard Home)
-Mais de 21.000 requisições diárias processadas com 21% de bloqueio preventivo de telemetrias, anúncios e domínios maliciosos direto no gateway:
+Requisições diárias processadas com bloqueio preventivo de telemetrias, anúncios e domínios maliciosos direto no gateway:
 
 ![AdGuard Home Metrics](assets/adguard-metrics.png)
 
 ---
 
-### 4. Digital Signage (Telas Livres) & Exposição de Borda
+### 4. Digital Signage (Tela Livre) & Exposição de Borda
 Painel administrativo do projeto comercial de mídia embarcada rodando no mesmo host, segregado em ambientes de Produção e Homologação com túneis Cloudflare:
 
 ![Telas Livres Kiosk e Cloudflare](assets/telas-kiosk-cloudflare.jpeg)
